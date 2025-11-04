@@ -6,63 +6,111 @@
   <title>Appjac</title>
   <style>
     :root{
-      --bg:#0b0f14; --card:#111827; --muted:#9aa4b2; --radius:18px;
-      --shadow:0 20px 50px rgba(0,0,0,.35); --dot:#334155; --dot-active:#e5e7eb;
-      --btn:rgba(0,0,0,.35); --btn-hover:rgba(0,0,0,.55); --speed:600ms;
-    }
-    body{
-      margin:0;min-height:100svh;display:grid;place-items:center;
-      background:radial-gradient(1200px 900px at 70% -10%, #0f172a 20%, transparent 60%), var(--bg);
-      color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
-    }
-    .wrap{width:min(96vw,980px);display:grid;gap:18px;justify-items:center;}
-    header{text-align:center;}
-    header h1{margin:0;font-weight:700;letter-spacing:.3px}
-    header p{margin:6px 0 0;color:var(--muted);font-size:.95rem}
-
-    .slider{
-      position:relative;width:min(92vw,880px);aspect-ratio:16/9;background:var(--card);
-      border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
-      -webkit-mask-image:-webkit-radial-gradient(white,black);
-    }
-    .slides{position:relative;width:100%;height:100%}
-    .slide{
-      position:absolute;inset:0;opacity:0;transition:opacity var(--speed) ease;
-      background:center/cover no-repeat;
-    }
-    .slide[data-active="true"]{opacity:1}
-    .slide::after{
-      content:"";position:absolute;inset:0;
-      background:linear-gradient(to top, rgba(0,0,0,.28), rgba(0,0,0,0) 60%)
-    }
-    .caption{
-      position:absolute;left:16px;bottom:14px;padding:10px 14px;border-radius:12px;
-      background:rgba(2,6,23,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
-      color:#eef2ff;font-weight:600;max-width:clamp(220px,60%,520px)
+      --bg: #0b0f14;
+      --card: #111827;
+      --muted: #9aa4b2;
+      --accent: #60a5fa;
+      --radius: 18px;
+      --shadow: 0 20px 50px rgba(0,0,0,.35);
+      --dot: #334155;
+      --dot-active: #e5e7eb;
+      --btn: rgba(0,0,0,.35);
+      --btn-hover: rgba(0,0,0,.55);
+      --speed: 600ms;
     }
 
-    .nav{--size:46px;position:absolute;inset:0;display:grid;
-      grid-template-columns:1fr 1fr;align-items:center;pointer-events:none}
-    .btn{
-      pointer-events:auto;justify-self:start;margin-left:8px;width:var(--size);height:var(--size);
-      display:grid;place-items:center;border:none;border-radius:999px;background:var(--btn);
-      color:white;cursor:pointer;transition:background .2s ease, transform .08s ease;
-      outline:none;backdrop-filter:blur(2px)
+    body {
+      margin: 0;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(1200px 900px at 70% -10%, #0f172a 20%, transparent 60%), var(--bg);
+      color: #e5e7eb;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
     }
-    .btn:active{transform:scale(.98)} .btn:hover{background:var(--btn-hover)}
-    .btn.next{justify-self:end;margin:0 8px 0 auto}
-    .btn svg{width:22px;height:22px}
 
-    .dots{display:flex;gap:9px;align-items:center}
-    .dot{
-      width:9px;height:9px;border-radius:999px;background:var(--dot);border:none;cursor:pointer;
-      transition:transform .2s ease, background .2s ease
+    .wrap {
+      width: min(96vw, 980px);
+      display: grid;
+      gap: 18px;
+      justify-items: center;
     }
-    .dot[aria-current="true"]{width:22px;border-radius:999px;background:var(--dot-active)}
-    .dot:focus-visible{outline:2px solid #60a5fa;outline-offset:3px}
 
-    @media (max-width:520px){
-      header h1{font-size:1.15rem}.caption{font-size:.9rem}
+    header { text-align: center; }
+    header h1 { margin: 0; font-weight: 700; letter-spacing: .3px; }
+    header p { margin: 6px 0 0; color: var(--muted); font-size: .95rem; }
+
+    .slider {
+      position: relative;
+      width: min(92vw, 880px);
+      aspect-ratio: 16/9;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      -webkit-mask-image: -webkit-radial-gradient(white, black);
+    }
+
+    .slides { position: relative; width: 100%; height: 100%; }
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0; transition: opacity var(--speed) ease;
+      background-position: center; background-size: cover; background-repeat: no-repeat;
+      will-change: opacity;
+    }
+    .slide[data-active="true"] { opacity: 1; }
+    .slide::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.28), rgba(0,0,0,0) 60%);
+      pointer-events: none;
+    }
+
+    .caption {
+      position: absolute; left: 16px; bottom: 14px;
+      padding: 10px 14px; border-radius: 12px;
+      background: rgba(2,6,23,.45);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      color: #eef2ff; font-weight: 600;
+      max-width: clamp(220px, 60%, 520px);
+    }
+
+    .nav {
+      --size: 46px;
+      position: absolute; inset: 0;
+      display: grid; grid-template-columns: 1fr 1fr; align-items: center;
+      pointer-events: none;
+    }
+    .btn {
+      pointer-events: auto;
+      justify-self: start; margin-left: 8px;
+      width: var(--size); height: var(--size);
+      display: grid; place-items: center;
+      border: none; border-radius: 999px;
+      background: var(--btn); color: white; cursor: pointer;
+      transition: background .2s ease, transform .08s ease;
+      outline: none; backdrop-filter: blur(2px);
+    }
+    .btn:active { transform: scale(.98); }
+    .btn:hover { background: var(--btn-hover); }
+    .btn.next { justify-self: end; margin: 0 8px 0 auto; }
+    .btn svg { width: 22px; height: 22px; }
+
+    .dots { display: flex; gap: 9px; align-items: center; }
+    .dot {
+      width: 9px; height: 9px; border-radius: 999px;
+      background: var(--dot); border: none; cursor: pointer;
+      transition: transform .2s ease, background .2s ease;
+    }
+    .dot[aria-current="true"] { width: 22px; border-radius: 999px; background: var(--dot-active); }
+    .dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+    @media (max-width: 520px) {
+      header h1 { font-size: 1.15rem; }
+      .caption { font-size: .9rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide { transition: none; }
     }
   </style>
 </head>
@@ -75,6 +123,7 @@
 
     <section class="slider" role="region" aria-roledescription="carousel" aria-label="Slideshow">
       <div class="slides" id="slides" aria-live="polite"></div>
+
       <div class="nav" aria-hidden="true">
         <button class="btn prev" id="prevBtn" aria-label="Previous slide">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -93,14 +142,20 @@
   </main>
 
   <script>
-    // Replace with your own images (URLs or local paths)
+    // ---- Images: replace with your own URLs/paths ----
     const images = [
-      { src:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2000&auto=format&fit=crop", caption:"Sunrise over calm water" },
-      { src:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2000&auto=format&fit=crop", caption:"Mountain trail at golden hour" },
-      { src:"https://scontent-ord5-3.xx.fbcdn.net/v/t39.30808-6/470178294_1371084454254220_3457637862760465835_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=DBPJc-xhwy0Q7kNvwFbip1f&_nc_oc=AdmPcsr9n-Zh9c-MAPzIqYY1lT9Ch6vr5XTlvpEV53CQsOGdirIgfo8VH4t79Doz1KUPm4I0xwciUxbiZ3c5xbrg&_nc_zt=23&_nc_ht=scontent-ord5-3.xx&_nc_gid=IhqPpGLtAtKzvZieqR-GYw&oh=00_AfgOQAoryAvfTP7ng4i-yrnheeKhQZIsJEFlFLOWN_A9Uw&oe=69104730" }
+      { src: "https://scontent-ord5-3.xx.fbcdn.net/v/t39.30808-6/470178294_1371084454254220_3457637862760465835_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=DBPJc-xhwy0Q7kNvwFbip1f&_nc_oc=AdmPcsr9n-Zh9c-MAPzIqYY1lT9Ch6vr5XTlvpEV53CQsOGdirIgfo8VH4t79Doz1KUPm4I0xwciUxbiZ3c5xbrg&_nc_zt=23&_nc_ht=scontent-ord5-3.xx&_nc_gid=IhqPpGLtAtKzvZieqR-GYw&oh=00_AfgOQAoryAvfTP7ng4i-yrnheeKhQZIsJEFlFLOWN_A9Uw&oe=69104730", caption: "Sunrise over calm water" },
+      { src: "https://scontent-ord5-1.xx.fbcdn.net/v/t1.6435-9/66378508_363623304355196_3198835764536279040_n.jpg?stp=dst-jpg_p180x540_tt6&_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=bZThvwxnJrIQ7kNvwG8n7bD&_nc_oc=AdnUqRqA4ptNAdXKSbSPo2KPOYpiqpSaFFuTTuqoCECevqARI-NGdyCTtROAnMaM0_Yu9bvavZ8Nk6Cq8di-dyQw&_nc_zt=23&_nc_ht=scontent-ord5-1.xx&_nc_gid=qi29lRKnL_lngErmF9L_Gg&oh=00_AfhOXVlTecj0-exl_P7eigBZQe3SDva2Zc6WbpIiqLsSfw&oe=6931EF29", caption: "Imma tickle you little guy" },
+      { src: "https://images.squarespace-cdn.com/content/v1/5a15ad16b7411ccec818471e/3f6bd8bd-01e8-467c-9f97-b77ca299228f/Kolor+Magazine+thick+black+men+%40khololifestyle.png", caption: "just messign with you twin" }
     ];
 
-    let index = 0;
+    // ---- Config ----
+    const AUTOPLAY_MS = 3500;     // time each slide shows
+    const FADE_SPEED = 600;       // keep in sync with --speed in CSS
+
+    let index = 0, timer = null, isHover = false;
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const elSlides = document.getElementById('slides');
     const elDots = document.getElementById('dots');
     const prevBtn = document.getElementById('prevBtn');
@@ -111,11 +166,12 @@
       const s = document.createElement('figure');
       s.className = 'slide';
       s.style.backgroundImage = `url("${img.src}")`;
-      s.setAttribute('role','group');
-      s.setAttribute('aria-roledescription','slide');
+      s.setAttribute('role', 'group');
+      s.setAttribute('aria-roledescription', 'slide');
       s.setAttribute('aria-label', img.caption || `Slide ${i+1}`);
-      s.setAttribute('aria-hidden','true');
-      if (img.caption){
+      s.setAttribute('aria-hidden', 'true');
+
+      if (img.caption) {
         const cap = document.createElement('figcaption');
         cap.className = 'caption';
         cap.textContent = img.caption;
@@ -127,14 +183,14 @@
       d.className = 'dot';
       d.type = 'button';
       d.setAttribute('aria-label', `Go to slide ${i+1}`);
-      d.addEventListener('click', () => goTo(i));
+      d.addEventListener('click', () => goTo(i, true));
       elDots.appendChild(d);
     });
 
     const slides = [...document.querySelectorAll('.slide')];
-    const dots   = [...document.querySelectorAll('.dot')];
+    const dots = [...document.querySelectorAll('.dot')];
 
-    function setActive(i){
+    function setActive(i) {
       slides.forEach((s, idx) => {
         const active = idx === i;
         s.dataset.active = active;
@@ -142,19 +198,52 @@
       });
       dots.forEach((d, idx) => d.setAttribute('aria-current', idx === i ? 'true' : 'false'));
     }
-    function goTo(i){
+
+    function goTo(i, user = false) {
       index = (i + slides.length) % slides.length;
       setActive(index);
+      if (user) restart();
     }
-    function next(){ goTo(index + 1); }
-    function prev(){ goTo(index - 1); }
 
-    prevBtn.addEventListener('click', prev);
-    nextBtn.addEventListener('click', next);
+    function next() { goTo(index + 1); }
+    function prev() { goTo(index - 1); }
 
-    // Init (manual only: no autoplay/loop timer/hover/keys/swipe)
+    function start() {
+      if (reduceMotion) return; // respect reduced motion
+      stop();
+      timer = setInterval(next, AUTOPLAY_MS);
+    }
+    function stop() { if (timer) clearInterval(timer); timer = null; }
+    function restart(){ stop(); start(); }
+
+    // Controls
+    nextBtn.addEventListener('click', () => next());
+    prevBtn.addEventListener('click', () => prev());
+
+    // Hover to pause
+    elSlides.parentElement.addEventListener('mouseenter', () => { isHover = true; stop(); });
+    elSlides.parentElement.addEventListener('mouseleave', () => { isHover = false; start(); });
+
+    // Keyboard arrows
+    addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'ArrowLeft') prev();
+    });
+
+    // Simple swipe
+    let touchX = null;
+    elSlides.addEventListener('touchstart', e => touchX = e.touches[0].clientX, {passive:true});
+    elSlides.addEventListener('touchend', e => {
+      if (touchX == null) return;
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
+      touchX = null;
+    }, {passive:true});
+
+    // Init
     images.forEach(({src}) => { const img = new Image(); img.src = src; }); // preload
     setActive(0);
+    setTimeout(start, FADE_SPEED + 50);
   </script>
 </body>
 </html>
