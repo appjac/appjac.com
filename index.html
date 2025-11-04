@@ -3,199 +3,78 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>jac</title>
+  <title>Appjac</title>
   <style>
     :root{
-      --bg: #0b0f14;
-      --card: #111827;
-      --muted: #9aa4b2;
-      --accent: #60a5fa;
-      --radius: 18px;
-      --shadow: 0 20px 50px rgba(0,0,0,.35);
-      --dot: #334155;
-      --dot-active: #e5e7eb;
-      --btn: rgba(0,0,0,.35);
-      --btn-hover: rgba(0,0,0,.55);
-      --speed: 600ms;
+      --bg:#0b0f14; --card:#111827; --muted:#9aa4b2; --radius:18px;
+      --shadow:0 20px 50px rgba(0,0,0,.35); --dot:#334155; --dot-active:#e5e7eb;
+      --btn:rgba(0,0,0,.35); --btn-hover:rgba(0,0,0,.55); --speed:600ms;
+    }
+    body{
+      margin:0;min-height:100svh;display:grid;place-items:center;
+      background:radial-gradient(1200px 900px at 70% -10%, #0f172a 20%, transparent 60%), var(--bg);
+      color:#e5e7eb;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
+    }
+    .wrap{width:min(96vw,980px);display:grid;gap:18px;justify-items:center;}
+    header{text-align:center;}
+    header h1{margin:0;font-weight:700;letter-spacing:.3px}
+    header p{margin:6px 0 0;color:var(--muted);font-size:.95rem}
+
+    .slider{
+      position:relative;width:min(92vw,880px);aspect-ratio:16/9;background:var(--card);
+      border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+      -webkit-mask-image:-webkit-radial-gradient(white,black);
+    }
+    .slides{position:relative;width:100%;height:100%}
+    .slide{
+      position:absolute;inset:0;opacity:0;transition:opacity var(--speed) ease;
+      background:center/cover no-repeat;
+    }
+    .slide[data-active="true"]{opacity:1}
+    .slide::after{
+      content:"";position:absolute;inset:0;
+      background:linear-gradient(to top, rgba(0,0,0,.28), rgba(0,0,0,0) 60%)
+    }
+    .caption{
+      position:absolute;left:16px;bottom:14px;padding:10px 14px;border-radius:12px;
+      background:rgba(2,6,23,.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      color:#eef2ff;font-weight:600;max-width:clamp(220px,60%,520px)
     }
 
-    /* Center everything */
-    body {
-      margin: 0;
-      min-height: 100svh;
-      display: grid;
-      place-items: center;
-      background: radial-gradient(1200px 900px at 70% -10%, #0f172a 20%, transparent 60%), var(--bg);
-      color: #e5e7eb;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji", "Segoe UI Symbol";
+    .nav{--size:46px;position:absolute;inset:0;display:grid;
+      grid-template-columns:1fr 1fr;align-items:center;pointer-events:none}
+    .btn{
+      pointer-events:auto;justify-self:start;margin-left:8px;width:var(--size);height:var(--size);
+      display:grid;place-items:center;border:none;border-radius:999px;background:var(--btn);
+      color:white;cursor:pointer;transition:background .2s ease, transform .08s ease;
+      outline:none;backdrop-filter:blur(2px)
     }
+    .btn:active{transform:scale(.98)} .btn:hover{background:var(--btn-hover)}
+    .btn.next{justify-self:end;margin:0 8px 0 auto}
+    .btn svg{width:22px;height:22px}
 
-    .wrap {
-      width: min(96vw, 980px);
-      display: grid;
-      gap: 18px;
-      justify-items: center;
+    .dots{display:flex;gap:9px;align-items:center}
+    .dot{
+      width:9px;height:9px;border-radius:999px;background:var(--dot);border:none;cursor:pointer;
+      transition:transform .2s ease, background .2s ease
     }
+    .dot[aria-current="true"]{width:22px;border-radius:999px;background:var(--dot-active)}
+    .dot:focus-visible{outline:2px solid #60a5fa;outline-offset:3px}
 
-    header {
-      text-align: center;
-    }
-    header h1 {
-      margin: 0;
-      font-weight: 700;
-      letter-spacing: .3px;
-    }
-    header p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: .95rem;
-    }
-
-    /* Slideshow card */
-    .slider {
-      position: relative;
-      width: min(92vw, 880px);
-      aspect-ratio: 16/9;
-      background: var(--card);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      -webkit-mask-image: -webkit-radial-gradient(white, black); /* nice antialias on iOS */
-    }
-
-    .slides {
-      position: relative;
-      width: 100%;
-      height: 100%;
-    }
-
-    .slide {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity var(--speed) ease;
-      background-position: center;
-      background-size: cover;
-      background-repeat: no-repeat;
-      will-change: opacity;
-    }
-
-    .slide[data-active="true"] {
-      opacity: 1;
-    }
-
-    /* Mild gradient overlay for readability */
-    .slide::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,.28), rgba(0,0,0,0) 60%);
-      pointer-events: none;
-    }
-
-    /* Caption (optional) */
-    .caption {
-      position: absolute;
-      left: 16px;
-      bottom: 14px;
-      padding: 10px 14px;
-      border-radius: 12px;
-      background: rgba(2,6,23,.45);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      color: #eef2ff;
-      font-weight: 600;
-      max-width: clamp(220px, 60%, 520px);
-    }
-
-    /* Controls */
-    .nav {
-      --size: 46px;
-      position: absolute;
-      inset: 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      pointer-events: none; /* let clicks pass except the buttons themselves */
-    }
-
-    .btn {
-      pointer-events: auto;
-      justify-self: start;
-      margin-left: 8px;
-      width: var(--size);
-      height: var(--size);
-      display: grid;
-      place-items: center;
-      border: none;
-      border-radius: 999px;
-      background: var(--btn);
-      color: white;
-      cursor: pointer;
-      transition: background .2s ease, transform .08s ease;
-      outline: none;
-      backdrop-filter: blur(2px);
-    }
-    .btn:active { transform: scale(.98); }
-    .btn:hover { background: var(--btn-hover); }
-
-    .btn.next {
-      justify-self: end;
-      margin: 0 8px 0 auto;
-    }
-
-    .btn svg { width: 22px; height: 22px; }
-
-    /* Dots */
-    .dots {
-      display: flex;
-      gap: 9px;
-      align-items: center;
-    }
-    .dot {
-      width: 9px; height: 9px;
-      border-radius: 999px;
-      background: var(--dot);
-      border: none;
-      cursor: pointer;
-      transition: transform .2s ease, background .2s ease;
-    }
-    .dot[aria-current="true"] {
-      width: 22px;
-      border-radius: 999px;
-      background: var(--dot-active);
-    }
-    .dot:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-
-    /* Responsive text scale */
-    @media (max-width: 520px) {
-      header h1 { font-size: 1.15rem; }
-      .caption { font-size: .9rem; }
-    }
-
-    /* Respect reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      .slide { transition: none }
+    @media (max-width:520px){
+      header h1{font-size:1.15rem}.caption{font-size:.9rem}
     }
   </style>
 </head>
 <body>
-
   <main class="wrap">
     <header>
-      <h1>Appjac — Featured Gallery</h1>
-      <p>Auto-playing, looping slideshow. Hover to pause. Use ◀ ▶ keys or swipe.</p>
+      <h1>Appjac</h1>
+      <p>Featured Gallery</p>
     </header>
 
-    <section
-      class="slider"
-      role="region"
-      aria-roledescription="carousel"
-      aria-label="Slideshow"
-    >
+    <section class="slider" role="region" aria-roledescription="carousel" aria-label="Slideshow">
       <div class="slides" id="slides" aria-live="polite"></div>
-
-      <!-- overlay controls -->
       <div class="nav" aria-hidden="true">
         <button class="btn prev" id="prevBtn" aria-label="Previous slide">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -214,35 +93,29 @@
   </main>
 
   <script>
-    // 1) Add your images here (URLs or file paths). Optional caption per image.
+    // Replace with your own images (URLs or local paths)
     const images = [
-      { src: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2000&auto=format&fit=crop", caption: "Sunrise over calm water" },
-      { src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2000&auto=format&fit=crop", caption: "Mountain trail at golden hour" },
-      { src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?q=80&w=2000&auto=format&fit=crop", caption: "City lights, long exposure" },
-      { src: "https://images.unsplash.com/photo-1526404428533-221bafc4378e?q=80&w=2000&auto=format&fit=crop", caption: "Forest road after rain" }
+      { src:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=2000&auto=format&fit=crop", caption:"Sunrise over calm water" },
+      { src:"https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=2000&auto=format&fit=crop", caption:"Mountain trail at golden hour" },
+      { src:"https://scontent-ord5-3.xx.fbcdn.net/v/t39.30808-6/470178294_1371084454254220_3457637862760465835_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=DBPJc-xhwy0Q7kNvwFbip1f&_nc_oc=AdmPcsr9n-Zh9c-MAPzIqYY1lT9Ch6vr5XTlvpEV53CQsOGdirIgfo8VH4t79Doz1KUPm4I0xwciUxbiZ3c5xbrg&_nc_zt=23&_nc_ht=scontent-ord5-3.xx&_nc_gid=IhqPpGLtAtKzvZieqR-GYw&oh=00_AfgOQAoryAvfTP7ng4i-yrnheeKhQZIsJEFlFLOWN_A9Uw&oe=69104730" }
     ];
 
-    // 2) Config
-    const AUTOPLAY_MS = 3500;  // time each slide shows
-    const FADE_SPEED = 600;    // keep in sync with --speed in CSS
-    let index = 0, timer = null, isHover = false, isReducing = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
+    let index = 0;
     const elSlides = document.getElementById('slides');
     const elDots = document.getElementById('dots');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
 
-    // 3) Build slides/dots
+    // Build slides & dots
     images.forEach((img, i) => {
       const s = document.createElement('figure');
       s.className = 'slide';
       s.style.backgroundImage = `url("${img.src}")`;
+      s.setAttribute('role','group');
+      s.setAttribute('aria-roledescription','slide');
       s.setAttribute('aria-label', img.caption || `Slide ${i+1}`);
-      s.setAttribute('role', 'group');
-      s.setAttribute('aria-roledescription', 'slide');
-      s.setAttribute('aria-hidden', 'true');
-
-      if (img.caption) {
+      s.setAttribute('aria-hidden','true');
+      if (img.caption){
         const cap = document.createElement('figcaption');
         cap.className = 'caption';
         cap.textContent = img.caption;
@@ -254,15 +127,14 @@
       d.className = 'dot';
       d.type = 'button';
       d.setAttribute('aria-label', `Go to slide ${i+1}`);
-      d.addEventListener('click', () => goTo(i, true));
+      d.addEventListener('click', () => goTo(i));
       elDots.appendChild(d);
     });
 
     const slides = [...document.querySelectorAll('.slide')];
-    const dots = [...document.querySelectorAll('.dot')];
+    const dots   = [...document.querySelectorAll('.dot')];
 
-    // 4) Helpers
-    function setActive(i) {
+    function setActive(i){
       slides.forEach((s, idx) => {
         const active = idx === i;
         s.dataset.active = active;
@@ -270,54 +142,19 @@
       });
       dots.forEach((d, idx) => d.setAttribute('aria-current', idx === i ? 'true' : 'false'));
     }
-
-    function goTo(i, user = false) {
+    function goTo(i){
       index = (i + slides.length) % slides.length;
       setActive(index);
-      if (user) restart();
     }
+    function next(){ goTo(index + 1); }
+    function prev(){ goTo(index - 1); }
 
-    function next() { goTo(index + 1); }
-    function prev() { goTo(index - 1); }
+    prevBtn.addEventListener('click', prev);
+    nextBtn.addEventListener('click', next);
 
-    function start() {
-      if (isReducing) return; // respect reduced motion
-      stop();
-      timer = setInterval(next, AUTOPLAY_MS);
-    }
-    function stop() { if (timer) clearInterval(timer); timer = null; }
-    function restart(){ stop(); start(); }
-
-    // 5) Wire events
-    nextBtn.addEventListener('click', () => next());
-    prevBtn.addEventListener('click', () => prev());
-
-    // Pause on hover
-    elSlides.parentElement.addEventListener('mouseenter', () => { isHover = true; stop(); });
-    elSlides.parentElement.addEventListener('mouseleave', () => { isHover = false; start(); });
-
-    // Keyboard nav
-    addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') next();
-      if (e.key === 'ArrowLeft') prev();
-    });
-
-    // Swipe (simple threshold)
-    let touchX = null;
-    elSlides.addEventListener('touchstart', e => touchX = e.touches[0].clientX, {passive:true});
-    elSlides.addEventListener('touchend', e => {
-      if (touchX == null) return;
-      const dx = e.changedTouches[0].clientX - touchX;
-      if (Math.abs(dx) > 40) (dx < 0 ? next() : prev());
-      touchX = null;
-    }, {passive:true});
-
-    // 6) Init
-    // Preload images quietly
-    images.forEach(({src}) => { const img = new Image(); img.src = src; });
+    // Init (manual only: no autoplay/loop timer/hover/keys/swipe)
+    images.forEach(({src}) => { const img = new Image(); img.src = src; }); // preload
     setActive(0);
-    // tiny delay so first fade feels natural
-    setTimeout(start, FADE_SPEED + 50);
   </script>
 </body>
 </html>
